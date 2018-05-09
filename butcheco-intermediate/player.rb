@@ -1,6 +1,7 @@
 class Player
   def play_turn(warrior)
     warrior = Warrior.new(warrior)
+    warrior.walk_to_stairs!
   end
 
   class Warrior
@@ -16,8 +17,12 @@ class Player
       warrior.feel
     end
 
-    def walk!
-      warrior.walk!
+    def walk!(direction: :forward)
+      warrior.walk!(direction)
+    end
+
+    def walk_to_stairs!
+      walk!(direction: direction_of_stairs)
     end
 
     private
