@@ -14,6 +14,10 @@ class Player
       warrior.attack!(direction)
     end
 
+    def attack_or_walk!(direction = :forward)
+      feel(direction).enemy? ? attack!(direction) : warrior.walk!(direction)
+    end
+
     # Returns the direction (:left, :right, :forward, :backward) the stairs are from your location.
     def direction_of_stairs
       warrior.direction_of_stairs
@@ -34,9 +38,9 @@ class Player
       warrior.rest!
     end
 
-    # Move in the given direction (:forward by default).
+    # Move in the given direction, but attack if run into enemy (:forward by default).
     def walk!(direction = :forward)
-      warrior.walk!(direction)
+      attack_or_walk!(direction)
     end
 
     # Walk towards the stairs.
