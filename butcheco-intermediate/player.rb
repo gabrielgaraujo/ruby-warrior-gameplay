@@ -10,8 +10,8 @@ class Player
     end
 
     # Attacks a unit in given direction (:forward by default).
-    def attack!(direction: :forward)
-      warrior.attack!
+    def attack!(direction = :forward)
+      warrior.attack!(direction)
     end
 
     # Returns the direction (:left, :right, :forward, :backward) the stairs are from your location.
@@ -20,8 +20,8 @@ class Player
     end
 
     # Returns a Space for the given direction (:forward by default).
-    def feel(direction: :forward)
-      warrior.feel
+  def feel(direction = :forward)
+      warrior.feel(direction)
     end
 
     # Returns an integer representing your health.
@@ -35,13 +35,13 @@ class Player
     end
 
     # Move in the given direction (:forward by default).
-    def walk!(direction: :forward)
+    def walk!(direction = :forward)
       warrior.walk!(direction)
     end
 
     # Walk towards the stairs.
     def walk_to_stairs!
-      walk!(direction: direction_of_stairs)
+      walk!(direction_of_stairs)
     end
 
     private
