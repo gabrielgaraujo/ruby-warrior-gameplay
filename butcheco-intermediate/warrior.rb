@@ -52,6 +52,18 @@ class Warrior
     soul.rescue!(direction)
   end
 
+  def look_around
+    Player::SPACE_TYPES.map do |space_type|
+      { space_type => look_around_for(space_type) }
+    end.reduce(:merge)
+  end
+
+  def look_around_for(space_type)
+    Player::DIRECTIONS_CLOCKWISE.select do |direction|
+      feel(direction).send("#{space_type}?")
+    end
+  end
+
   # Gain 10% of max health back
   def rest!
     soul.rest!
