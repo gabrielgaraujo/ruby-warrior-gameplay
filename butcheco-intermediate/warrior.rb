@@ -1,5 +1,9 @@
 class Warrior
-  attr_accessor :soul
+  attr_accessor :soul, :memorized_captives
+
+  def initialize
+    @memorized_captives = []
+  end
 
   def attack!(direction = :forward)
     soul.attack!(direction)
@@ -41,8 +45,15 @@ class Warrior
     end
   end
 
-  def rest!
-    soul.rest!
+  def memorize_captive(captive_direction)
+    return if !memorized_captives.empty? &&
+              memorized_captives.map { |memorized| memorized.size == 1 }.any?
+
+    memorized_captives << [captive_direction]
+  end
+
+  def memorize_captives(captives_directions)
+    captives_directions.each { |direction| memorize_captive(direction) }
   end
 
   def rescue_near_captive!
@@ -54,7 +65,13 @@ class Warrior
   end
 
   def rescue_prisoner!(direction = :forward)
+    memorized_captives.delete([direction])
+    return if direction.nil?
     soul.rescue!(direction)
+  end
+
+  def rest!
+    soul.rest!
   end
 
   def walk!(direction = :forward)
