@@ -1,9 +1,5 @@
 class Warrior
-  attr_accessor :soul, :memorized_captives
-
-  def initialize
-    @memorized_captives = []
-  end
+  attr_accessor :soul, :safe_captives
 
   def attack!(direction = :forward)
     soul.attack!(direction)
@@ -38,7 +34,9 @@ class Warrior
   end
 
   def listen
-    soul.listen
+    spaces = soul.listen
+    @safe_captives ||= spaces.select(&:captive?)
+    spaces
   end
 
   def look_around
@@ -53,23 +51,15 @@ class Warrior
     end
   end
 
-  def memorize_captive(captive_direction)
-    return if !memorized_captives.empty? &&
-              memorized_captives.map { |memorized| memorized.size == 1 }.any?
-
-    memorized_captives << [captive_direction]
-  end
-
-  def memorize_captives(captives_directions)
-    captives_directions.each { |direction| memorize_captive(direction) }
-  end
-
-  def rescue_near_captive!
-    Player::DIRECTIONS_CLOCKWISE.each do |direction|
-      return help!(direction) if feel(direction).captive?
+  def rescue_captives!
+    return if safe_captives.empty?
+    captive = safe_captives.first
+    if feel(direction_of(captive)).location == captive.location
+      safe_captives.shift
+      return help!(direction_of(captive))
     end
 
-    false
+    walk!(direction_of(captive))
   end
 
   def rescue_prisoner!(direction = :forward)
