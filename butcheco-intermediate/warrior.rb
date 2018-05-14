@@ -17,6 +17,10 @@ class Warrior
     soul.bind!(direction)
   end
 
+  def direction_of(space)
+    soul.direction_of(space)
+  end
+
   def direction_of_stairs
     soul.direction_of_stairs
   end
@@ -31,6 +35,10 @@ class Warrior
 
   def help!(direction = :forward)
     soul.rescue!(direction)
+  end
+
+  def listen
+    soul.listen
   end
 
   def look_around
