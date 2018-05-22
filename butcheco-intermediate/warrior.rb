@@ -5,8 +5,26 @@ class Warrior
     soul.attack!(direction)
   end
 
-  def attack_or_walk!(direction = :forward)
-    feel(direction).enemy? ? attack!(direction) : soul.walk!(direction)
+  def attack_or_walk!(direction = :forward, avoid_stairs: true)
+    if feel(direction).enemy?
+      attack!(direction)
+    elsif avoid_stairs
+      walk_clear_path!(direction)
+    else
+      soul.walk!(direction)
+    end
+  end
+
+  def walk_clear_path!(direction)
+    space = feel(direction)
+
+    if space.stairs? || space.captive?
+      directions = look_around_for(:empty)
+      directions.delete(direction)
+      direction = directions.sample
+    end
+
+    soul.walk!(direction)
   end
 
   def bind!(direction = :forward)
@@ -59,7 +77,7 @@ class Warrior
       return help!(direction_of(captive))
     end
 
-    walk!(direction_of(captive))
+    walk!(direction_of(captive), avoid_stairs: true)
   end
 
   def rescue_prisoner!(direction = :forward)
@@ -72,8 +90,8 @@ class Warrior
     soul.rest!
   end
 
-  def walk!(direction = :forward)
-    attack_or_walk!(direction)
+  def walk!(direction = :forward, avoid_stairs: false)
+    attack_or_walk!(direction, avoid_stairs: avoid_stairs)
   end
 
   def walk_to_stairs!
